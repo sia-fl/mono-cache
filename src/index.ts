@@ -20,7 +20,7 @@ const cache = <T extends Object>(options?: CacheOptions) => {
     get: <T2>(key: CachePaths<T>) => {
       return inlineClient.get(key) as CacheGet<T, T2>;
     },
-    set: (key: CachePaths<T>, val: any) => inlineClient.set(key, val),
+    set: (key: CachePaths<T>, val: any, ttl?: number) => inlineClient.set(key, val, ttl),
     del: (key: CachePaths<T>) => inlineClient.del(key),
     ttl: (key: CachePaths<T>, ttl: number) => inlineClient.ttl(key, ttl),
     increment: (key: CachePaths<T>, val: number) => inlineClient.increment(key, val),

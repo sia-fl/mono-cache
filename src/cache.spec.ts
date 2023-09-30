@@ -45,4 +45,18 @@ describe('cache', () => {
     const getTestA = testCache.get('a');
     expect(getTestA).toBe(2);
   });
+
+  it('memory ttl', async () => {
+    const c = cache<TestCacheState>();
+    c.set('a', 1, 1000 * 2);
+    const getA = c.get('a');
+    expect(getA).toBe(1);
+    await new Promise(resolve => {
+      setTimeout(() => {
+        const getA = c.get('a');
+        expect(getA).toBe(undefined);
+        resolve(undefined);
+      }, 3000);
+    });
+  });
 });

@@ -7,7 +7,19 @@ class BaseCache {
 }
 
 class MemoryCache extends BaseCache implements BaseCacheType {
-  private ttlRecord: Record<string, number>;
+  private ttlRecord: Record<string, number> = {};
+
+  constructor() {
+    super();
+    setInterval(() => {
+      const now = Date.now();
+      for (const key in this.ttlRecord) {
+        if (this.ttlRecord[key] < now) {
+          this.del(key);
+        }
+      }
+    }, 1000);
+  }
 
   get = ((key: string) => {
     const keys = splitKey(key);

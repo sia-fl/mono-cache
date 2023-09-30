@@ -26,7 +26,7 @@ export type CacheGet<T, K> = K extends `${infer A}.${infer B}`
 
 export interface BaseCacheType<T extends object = object> {
   get(key: CachePaths<T>): any;
-  set(key: CachePaths<T>, val: any): any;
+  set(key: CachePaths<T>, val: any, ttl?: number): any;
   del(key: CachePaths<T>): boolean;
   ttl(key: CachePaths<T>, ttl: number): void;
   increment(key: CachePaths<T>, val: number): void;

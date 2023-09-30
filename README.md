@@ -32,6 +32,10 @@ const age = c.get('age');
 const next = c.get('next');
 console.log(name, age, next);
 
+// ttl
+
+c.set('name', 'mono-cache', 1000); // 1000 = 1s
+
 // how to get result type on get method ?
 
 import { CachePaths } from './type';
