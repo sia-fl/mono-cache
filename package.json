@@ -1,6 +1,6 @@
 {
   "name": "mono-cache",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "support ( memory & redis ) drive in nodejs",
   "repository": {
     "type": "git",
