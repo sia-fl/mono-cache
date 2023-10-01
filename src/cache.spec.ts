@@ -13,7 +13,7 @@ interface TestCacheState {
   };
 }
 
-const testCacheGet = (c: BaseCacheType<TestCacheState>) => {
+const testGet = (c: BaseCacheType<TestCacheState>) => {
   const getA = c.get('a');
   expect(getA).toBe(undefined);
   c.set('b', 1);
@@ -32,7 +32,7 @@ const testCacheGet = (c: BaseCacheType<TestCacheState>) => {
 describe('cache', () => {
   it('memory get', () => {
     const c = cache<TestCacheState>();
-    testCacheGet(c);
+    testGet(c);
   });
 
   it('memory namespace', () => {
