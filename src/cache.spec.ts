@@ -59,4 +59,20 @@ describe('cache', () => {
       }, 3000);
     });
   });
+
+  it('memory increment', () => {
+    const c = cache<TestCacheState>();
+    c.set('a', 1);
+    c.increment('a', 1);
+    const getA = c.get('a');
+    expect(getA).toBe(2);
+  });
+
+  it('memory decrement', () => {
+    const c = cache<TestCacheState>();
+    c.set('a', 1);
+    c.decrement('a', 1);
+    const getA = c.get('a');
+    expect(getA).toBe(0);
+  });
 });
