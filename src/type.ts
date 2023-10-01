@@ -25,12 +25,12 @@ export type CacheGet<T, K> = K extends `${infer A}.${infer B}`
   : never;
 
 export interface BaseCacheType<T extends object = object> {
-  get(key: CachePaths<T>): any;
-  set(key: CachePaths<T>, val: any, ttl?: number): any;
-  del(key: CachePaths<T>): boolean;
-  ttl(key: CachePaths<T>, ttl: number): void;
-  increment(key: CachePaths<T>, val: number): void;
-  decrement(key: CachePaths<T>, val: number): void;
+  get(key: string | CachePaths<T>): any;
+  set(key: string | CachePaths<T>, val: any, ttl?: number): any;
+  del(key: string | CachePaths<T>): boolean;
+  ttl(key: string | CachePaths<T>, ttl: number): void;
+  increment(key: string | CachePaths<T>, val: number): void;
+  decrement(key: string | CachePaths<T>, val: number): void;
 }
 
 type CacheType = 'memory' | 'redis';
