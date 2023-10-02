@@ -29,8 +29,8 @@ export interface BaseCacheType<T extends object = object> {
   set(key: string | CachePaths<T>, val: any, ttl?: number): any;
   del(key: string | CachePaths<T>): boolean;
   ttl(key: string | CachePaths<T>, ttl: number): void;
-  increment(key: string | CachePaths<T>, val: number): void;
-  decrement(key: string | CachePaths<T>, val: number): void;
+  increment(key: string | CachePaths<T>, val: number, ttl?: number): void;
+  decrement(key: string | CachePaths<T>, val: number, ttl?: number): void;
 }
 
 type CacheType = 'memory' | 'redis';

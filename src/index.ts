@@ -24,9 +24,10 @@ const cache = <T extends Object = object>(options?: CacheOptions) => {
       inlineClient.set(key as any, val, ttl),
     del: (key: string | CachePaths<T>) => inlineClient.del(key as any),
     ttl: (key: string | CachePaths<T>, ttl: number) => inlineClient.ttl(key as any, ttl),
-    increment: (key: string | CachePaths<T>, val: number) =>
-      inlineClient.increment(key as any, val),
-    decrement: (key: string | CachePaths<T>, val: number) => inlineClient.decrement(key as any, val)
+    increment: (key: string | CachePaths<T>, val: number, ttl?: number) =>
+      inlineClient.increment(key as any, val, ttl),
+    decrement: (key: string | CachePaths<T>, val: number, ttl?: number) =>
+      inlineClient.decrement(key as any, val, ttl)
   };
 };
 

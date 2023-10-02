@@ -74,7 +74,7 @@ class MemoryCache extends BaseCache implements BaseCacheType {
     this.ttlRecord[key] = Date.now() + ttl;
   }
 
-  decrement(key: string, val: number): void {
+  decrement(key: string, val: number, ttl?: number): void {
     const old = this.get(key);
     if (old === undefined) {
       this.set(key, val);
@@ -82,11 +82,11 @@ class MemoryCache extends BaseCache implements BaseCacheType {
       if (typeof old !== 'number') {
         throw new Error('old val must be number');
       }
-      this.set(key, old - val);
+      this.set(key, old - val, ttl);
     }
   }
 
-  increment(key: string, val: number): void {
+  increment(key: string, val: number, ttl?: number): void {
     const old = this.get(key);
     if (old === undefined) {
       this.set(key, val);
@@ -94,7 +94,7 @@ class MemoryCache extends BaseCache implements BaseCacheType {
       if (typeof old !== 'number') {
         throw new Error('old val must be number');
       }
-      this.set(key, old + val);
+      this.set(key, old + val, ttl);
     }
   }
 }
