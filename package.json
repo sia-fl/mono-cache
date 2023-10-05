@@ -1,6 +1,6 @@
 {
   "name": "mono-cache",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "support ( memory & redis ) drive in nodejs",
   "repository": {
     "type": "git",
@@ -9,7 +9,8 @@
   "scripts": {
     "build": "tsc && tsx build.ts",
     "lint": "prettier --write .",
-    "test": "vitest"
+    "test": "vitest",
+    "push": "npm run build && npm publish --access public"
   },
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
