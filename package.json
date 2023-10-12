@@ -1,7 +1,7 @@
 {
   "name": "mono-cache",
-  "version": "1.0.10",
-  "description": "support ( memory & redis ) drive in nodejs",
+  "version": "2.0.0",
+  "description": "support ( memory & redis & upstash ) drive in nodejs",
   "repository": {
     "type": "git",
     "url": "https://github.com/sia-fl/mono-cache"
@@ -26,6 +26,9 @@
   "author": "杨伟杰 <sia-fl@outlook.com> (https://github.com/sia-fl)",
   "license": "MIT",
   "devDependencies": {
+    "@upstash/redis": "^1.23.3",
+    "@vitest/ui": "^0.34.6",
+    "dotenv": "^16.3.1",
     "esbuild": "^0.19.4",
     "prettier": "^3.0.3",
     "tsx": "^3.13.0",

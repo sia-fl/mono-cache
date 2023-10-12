@@ -1,13 +1,14 @@
-import { BaseCacheType, CacheGet, CacheOptions, CachePaths } from './type';
-import { MemoryCache, MemoryKvCache } from './cache';
+import { CacheBaseType, CacheGet, CacheOptions, CachePaths } from './type';
+import { CacheMemory, CacheMemoryKv } from './implement/cache-memory';
+import { CacheUpstashRedis, CacheUpstashRedisKv } from './implement/cache-upstash-redis';
 export * from './type';
 
-let client = new MemoryCache();
-let kvClient = new MemoryKvCache();
+let client = new CacheMemory();
+let kvClient = new CacheMemoryKv();
 
 const cache = <T extends Object = object>(options?: CacheOptions) => {
-  const methods = <KeyType>() => {
-    let inlineClient: BaseCacheType<KeyType> = client as any;
+  const methods = <HashKeyType, KeyType>() => {
+    let inlineClient: CacheBaseType<HashKeyType> = client as any;
     if (!options) {
       options = {};
     }
@@ -15,25 +16,25 @@ const cache = <T extends Object = object>(options?: CacheOptions) => {
     options.namespace = options.namespace || 'default';
     if (options.type === 'memory') {
       if (options.namespace !== 'default') {
-        inlineClient = new MemoryCache() as any;
+        inlineClient = new CacheMemory() as any;
       }
+    } else if (options.type === 'upstash-redis') {
+      inlineClient = new CacheUpstashRedis(options.upstashRedisConn) as any;
     }
     return {
-      get: <T2>(key: KeyType) => {
-        return inlineClient.get(key as any) as CacheGet<T, T2>;
+      get: <T2>(key: HashKeyType) => {
+        return inlineClient.get(key as any) as Promise<CacheGet<T, T2>>;
       },
-      set: (key: KeyType, val: any, ttl?: number) => inlineClient.set(key as any, val, ttl),
-      del: (key: KeyType) => inlineClient.del(key as any),
+      set: (key: HashKeyType, val: any) => inlineClient.set(key as any, val),
+      del: (key: HashKeyType) => inlineClient.del(key as any),
       ttl: (key: KeyType, ttl: number) => inlineClient.ttl(key as any, ttl),
-      increment: (key: KeyType, val: number, ttl?: number) =>
-        inlineClient.increment(key as any, val, ttl),
-      decrement: (key: KeyType, val: number, ttl?: number) =>
-        inlineClient.decrement(key as any, val, ttl)
+      increment: (key: HashKeyType, val: number) => inlineClient.increment(key as any, val),
+      decrement: (key: HashKeyType, val: number) => inlineClient.decrement(key as any, val)
     };
   };
 
-  const kvMethods = <KeyType>() => {
-    let inlineClientKv: BaseCacheType<KeyType> = kvClient as any;
+  const kvMethods = <HashKeyType>() => {
+    let inlineClientKv: CacheBaseType<HashKeyType> = kvClient as any;
     if (!options) {
       options = {};
     }
@@ -41,29 +42,29 @@ const cache = <T extends Object = object>(options?: CacheOptions) => {
     options.namespace = options.namespace || 'default';
     if (options.type === 'memory') {
       if (options.namespace !== 'default') {
-        inlineClientKv = new MemoryKvCache() as any;
+        inlineClientKv = new CacheMemoryKv() as any;
       }
+    } else if (options.type === 'upstash-redis') {
+      inlineClientKv = new CacheUpstashRedisKv(options.upstashRedisConn) as any;
     }
     return {
-      get: <T2>(key: KeyType) => {
-        return inlineClientKv.get(key as any) as CacheGet<T, T2>;
+      get: <T2>(key: HashKeyType) => {
+        return inlineClientKv.get(key as any) as Promise<CacheGet<T, T2>>;
       },
-      set: (key: KeyType, val: any, ttl?: number) => inlineClientKv.set(key as any, val, ttl),
-      del: (key: KeyType) => inlineClientKv.del(key as any),
-      ttl: (key: KeyType, ttl: number) => inlineClientKv.ttl(key as any, ttl),
-      increment: (key: KeyType, val: number, ttl?: number) =>
-        inlineClientKv.increment(key as any, val, ttl),
-      decrement: (key: KeyType, val: number, ttl?: number) =>
-        inlineClientKv.decrement(key as any, val, ttl)
+      set: (key: HashKeyType, val: any) => inlineClientKv.set(key as any, val),
+      del: (key: HashKeyType) => inlineClientKv.del(key as any),
+      ttl: (key: HashKeyType, ttl: number) => inlineClientKv.ttl(key as any, ttl),
+      increment: (key: HashKeyType, val: number) => inlineClientKv.increment(key as any, val),
+      decrement: (key: HashKeyType, val: number) => inlineClientKv.decrement(key as any, val)
     };
   };
 
   return {
     make() {
-      return methods<string | CachePaths<T>>();
+      return methods<string | CachePaths<T>, string | keyof T>();
     },
     makeSafe() {
-      return methods<CachePaths<T>>();
+      return methods<CachePaths<T>, keyof T>();
     },
     makeKv() {
       return kvMethods<string | keyof T>();

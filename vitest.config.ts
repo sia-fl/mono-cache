@@ -2,5 +2,7 @@ import { defineConfig } from 'vitest/config';
 
 // noinspection JSUnusedGlobalSymbols
 export default defineConfig({
-  test: {}
+  test: {
+    testTimeout: 10000
+  }
 });

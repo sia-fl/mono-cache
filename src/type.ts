@@ -1,3 +1,5 @@
+import { RedisConfigNodejs } from '@upstash/redis';
+
 type GenNode<K extends string | number, IsRoot extends boolean> = IsRoot extends true
   ? `${K}`
   : `.${K}` | (K extends number ? `[${K}]` | `.[${K}]` : never);
@@ -24,20 +26,24 @@ export type CacheGet<T, K> = K extends `${infer A}.${infer B}`
   ? T[K]
   : never;
 
-export interface BaseCacheType<T> {
-  get(key: T): any;
-  set(key: T, val: any, ttl?: number): any;
-  del(key: T): void;
-  ttl(key: T, ttl: number): void;
-  increment(key: T, val: number, ttl?: number): void;
-  decrement(key: T, val: number, ttl?: number): void;
+export interface CacheBaseType<T, T2 = T> {
+  get(key: T): Promise<any>;
+  set(key: T, val: any): Promise<'OK' | number>;
+  del(key: T): Promise<number>;
+  ttl(key: T2, ttl: number): Promise<0 | 1>;
+  increment(key: T, val: number): Promise<number>;
+  decrement(key: T, val: number): Promise<number>;
 }
 
-export type CacheType<T extends object = object> = BaseCacheType<CachePaths<T>>;
+export type CacheType<T extends object = object, T2 extends object = T> = CacheBaseType<
+  CachePaths<T>,
+  CachePaths<T2>
+>;
 
-export type KvCacheType<T extends object = object> = BaseCacheType<keyof T>;
+export type KvCacheType<T extends object = object> = CacheBaseType<keyof T>;
 
 export interface CacheOptions {
-  type?: 'memory' | 'redis';
+  type?: 'memory' | 'redis' | 'upstash-redis';
   namespace?: string;
+  upstashRedisConn?: RedisConfigNodejs;
 }
